@@ -53,6 +53,7 @@ void swap(int* xp, int* yp)
 }
 
 ///
+
 ///Task Three
 int sumMax(int* numbers, int length, int k)
 {
@@ -78,14 +79,51 @@ int sumMax(int* numbers, int length, int k)
 	return sum;
 }
 ///
+
+///Task 4
+int findNumberOfPairs(int* numbers, int length,  int sum)
+{
+	int right = numbers[length-1];
+	int left = numbers[0];
+
+	int leftCounter = 0;
+	int rightCounter = length-1;
+	
+	int numberOfPairs = 0;
+	while(left!=right)
+	{
+		std::cout << left << " " << right << std::endl;
+		if((left+right)>sum)
+		{
+			rightCounter -= 1;
+			right = numbers[rightCounter];
+		}
+		if((left+right) == sum)
+		{
+			numberOfPairs++;
+			leftCounter += 1;
+			left = numbers[leftCounter];
+
+			rightCounter -= 1;
+			right = numbers[rightCounter];
+		}
+		if ((left + right) < sum)
+		{
+			leftCounter += 1;
+			left = numbers[leftCounter];
+		}
+
+	}
+
+	return numberOfPairs;
+	
+}
+///
 int main()
 {
 	//char input[4] = { 'd', 'a', 'd', 0 };
-	int input[5] = {1, 5, 2, 4, 3};
-	std::cout << sumMax(input, 5,2);/*
-	for (int i = 0; i < 5; ++i)
-	{
-		std::cout << input[i]<< std::endl;
-	}*/
+	int input[5] = {1, 2, 3,4,5};
+	int sum = 21;
+	std::cout << findNumberOfPairs(input, 5, 6) << std::endl;
 	//std::cout << isPalindrome(input, strlen(input)-1);
 }
