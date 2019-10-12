@@ -4,11 +4,11 @@
 
 int main()
 {
-    std::cout << "Hello World!\n";
+	std::cout << "Hello World!\n";
 }
 
 std::string superReducedString(std::string s) {
-	std::map<char, bool> neighbors;
+	std::map<bool, char> neighbors;
 
 	int stringLength = s.length();
 
@@ -17,11 +17,11 @@ std::string superReducedString(std::string s) {
 	{
 		if(s[i] == s[i+1])
 		{
-			neighbors[s[i]] = true;
+			neighbors[true] = s[i];
 		}
 		else
 		{
-			neighbors[s[i]] = false;
+			neighbors[false] = s[i];
 		}
 	}
 
