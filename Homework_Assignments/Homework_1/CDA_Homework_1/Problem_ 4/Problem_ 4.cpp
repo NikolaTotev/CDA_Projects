@@ -13,21 +13,20 @@ int main()
 {
 
 	int numberOfRows = 0;
-	std::cin >> numberOfRows;
+	cin >> numberOfRows;
 
-	std::vector<std::vector <int>> sockInfo;
-	sockInfo.reserve(numberOfRows);
+	vector<vector <int>> sockInfo;
 
-	std::string line;
-	std::getline(std::cin, line);
+	string line;
+	getline(cin, line);
 
 	for (int i = 0; i < numberOfRows; ++i)
 	{
 		int number;
-		std::vector<int> sockPair;
+		vector<int> sockPair;
 
-		std::getline(std::cin, line);
-		std::istringstream stream(line);
+		getline(std::cin, line);
+		istringstream stream(line);
 		while (stream >> number)
 			sockPair.push_back(number);
 
@@ -41,20 +40,20 @@ int main()
 		{
 			bool bothOdd = sockInfo[i][j] % 2 != 0 && sockInfo[i][j + 1] % 2 != 0;
 			bool bothEven = sockInfo[i][j] % 2 == 0 && sockInfo[i][j + 1] % 2 == 0;
-			bool rightOutOfBounds = sockInfo[i][j + 1] < 2 && sockInfo[i][j] > 0 || sockInfo[i][j+1] < 0;
-			bool leftOutOfBounds = sockInfo[i][j] < 0;
-			if(bothEven || bothOdd || rightOutOfBounds || leftOutOfBounds)
+			bool rightOutOfBounds = sockInfo[i][j + 1] < 2 && sockInfo[i][j] > 0 || sockInfo[i][j + 1] < 0;
+			bool leftOutOfBounds = sockInfo[i][j] < 0;// || sockInfo[i][j] == 0;
+			bool differenceDisparity = sockInfo[i][j] < sockInfo[i][j + 1] && ((sockInfo[i][j+1] - sockInfo[i][j]) > 1);
+			if (bothEven || bothOdd || rightOutOfBounds || leftOutOfBounds || differenceDisparity)
 			{
-				std::cout << "no" << std::endl;
+				cout << "no" << endl;
 			}
 			else
 			{
-				std::cout << "yes" << std::endl;
+				cout << "yes" << endl;
 			}
 		}
 	}
 
-	
+
 }
 
- 
