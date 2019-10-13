@@ -4,8 +4,15 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+using namespace std;
 
 int main()
+
 {
 
 	std::string line;
@@ -17,33 +24,35 @@ int main()
 	while (stream >> number)
 		numbers.push_back(number);
 
-	int passing_grade = numbers[0];
-	int max_grade = 0;
-	int min_grade = numbers[1];
+	float passing_grade = numbers[0];	
+	
+	float availableSum = 0;
+	int peopleWhoCanGive = 0;
+	float neededSum = 0;
 
-	for (int i = 1; i < numbers.size(); ++i)
+	for (int i = 2; i < numbers.size(); ++i)
 	{
-		if(numbers[i] > max_grade)
+		if(numbers[i] > passing_grade)
 		{
-			max_grade = numbers[i];
+			availableSum += numbers[i];
+			peopleWhoCanGive++;
 		}
-		if(numbers[i] < min_grade)
-		{
-			min_grade = numbers[i];
+		else if(numbers[i] < passing_grade)
+		{			
+			neededSum += (passing_grade -numbers[i]);
 		}
 	}
 
-	std::cout << max_grade << " " << min_grade << " " << passing_grade << std::endl;
+	if (peopleWhoCanGive != 0)
+	{
+
+		if ((availableSum - neededSum) / peopleWhoCanGive >= passing_grade)
+		{
+			cout << "yes";
+			return 0;
+		}
+	}
+	cout << "no";
+	return 0;
 
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
