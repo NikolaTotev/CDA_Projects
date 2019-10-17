@@ -59,14 +59,14 @@ namespace Problem_1Test
             {
                 if (letterCount1[i] != letterCount2[i])
                 {
-                    Console.WriteLine("no");
+                    Console.Write("no");
                     return;
                 }
             }
 
 
-            
-           // Console.WriteLine("yes");
+
+            Console.Write("yes");
 
         }//Start
     }
