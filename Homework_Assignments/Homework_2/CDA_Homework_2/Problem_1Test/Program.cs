@@ -30,7 +30,7 @@ namespace Problem_1Test
             List<Int64> letterCount1 = new List<Int64>();
 
 
-            for (int i = 0; i < 25; i++)
+            for (int i = 0; i < 26; i++)
             {
                 letterCount1.Add(0);
             }
@@ -44,7 +44,7 @@ namespace Problem_1Test
 
             List<Int64> letterCount2 = new List<Int64>();
 
-            for (int i = 0; i < 25; i++)
+            for (int i = 0; i < 26; i++)
             {
                 letterCount2.Add(0);
             }
@@ -55,7 +55,7 @@ namespace Problem_1Test
                 letterCount2[index-1]++;
             }
 
-            for (int i = 0; i < 25; i++)
+            for (int i = 0; i < 26; i++)
             {
                 if (letterCount1[i] != letterCount2[i])
                 {
