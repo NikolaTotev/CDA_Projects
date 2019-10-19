@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.29009.5
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Permutation_Test", "Permutation_Test\Permutation_Test.vcxproj", "{F80A77BE-97DC-4B61-8C1C-37BD42D32111}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Problem_1Test", "Problem_1Test\Problem_1Test.csproj", "{3FCE8D3C-01DE-4845-824A-38111F807A6E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Problem_1Test", "Problem_1Test\Problem_1Test.csproj", "{3FCE8D3C-01DE-4845-824A-38111F807A6E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Monsters", "Monsters\Monsters.vcxproj", "{1BD171CB-4F2F-4E45-A769-DF10D1C189D1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,16 @@ Global
 		{3FCE8D3C-01DE-4845-824A-38111F807A6E}.Release|x64.Build.0 = Release|Any CPU
 		{3FCE8D3C-01DE-4845-824A-38111F807A6E}.Release|x86.ActiveCfg = Release|Any CPU
 		{3FCE8D3C-01DE-4845-824A-38111F807A6E}.Release|x86.Build.0 = Release|Any CPU
+		{1BD171CB-4F2F-4E45-A769-DF10D1C189D1}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{1BD171CB-4F2F-4E45-A769-DF10D1C189D1}.Debug|x64.ActiveCfg = Debug|x64
+		{1BD171CB-4F2F-4E45-A769-DF10D1C189D1}.Debug|x64.Build.0 = Debug|x64
+		{1BD171CB-4F2F-4E45-A769-DF10D1C189D1}.Debug|x86.ActiveCfg = Debug|Win32
+		{1BD171CB-4F2F-4E45-A769-DF10D1C189D1}.Debug|x86.Build.0 = Debug|Win32
+		{1BD171CB-4F2F-4E45-A769-DF10D1C189D1}.Release|Any CPU.ActiveCfg = Release|Win32
+		{1BD171CB-4F2F-4E45-A769-DF10D1C189D1}.Release|x64.ActiveCfg = Release|x64
+		{1BD171CB-4F2F-4E45-A769-DF10D1C189D1}.Release|x64.Build.0 = Release|x64
+		{1BD171CB-4F2F-4E45-A769-DF10D1C189D1}.Release|x86.ActiveCfg = Release|Win32
+		{1BD171CB-4F2F-4E45-A769-DF10D1C189D1}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
