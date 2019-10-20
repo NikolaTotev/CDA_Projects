@@ -28,7 +28,6 @@ namespace Darts
                 if (lastPoint == neededPoints)
                 {
                     numberOfOptions += 3;
-
                     displayOptions.Add($"D{lastPoint / 2}");
                     displayOptions.Add($"0, D{lastPoint / 2}");
                     displayOptions.Add($"0, 0, D{lastPoint / 2}");
@@ -39,7 +38,7 @@ namespace Darts
                     if (diff < 0 || diff > 120)
                     {
                         //no possible combinations
-                        break;
+                        continue;
                     }
 
                     if (IsValidSingle(diff))
