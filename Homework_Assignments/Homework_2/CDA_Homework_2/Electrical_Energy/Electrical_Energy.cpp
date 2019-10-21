@@ -7,7 +7,7 @@
 	#include <iostream>
 	#include <vector>
 	using  namespace  std;
-	int counter = 0;
+	long long counter = 0;
 	void merge(long long* arr, long long* helper, long long start, long long mid, long long end)
 	{
 

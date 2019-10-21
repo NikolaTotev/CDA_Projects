@@ -5,12 +5,63 @@
 #include <algorithm>
 using namespace std;
 
+
+void merge(long long* arr, long long* helper, long long start, long long mid, long long end)
+{
+
+	int left1 = start;
+	int left2 = mid;
+	int i = start;
+
+	for (; left1 < mid && left2 < end; ++i)
+
+	{
+		if (arr[left1] <= arr[left2])
+		{
+			helper[i] = arr[left1++];
+		}
+		else
+		{
+			helper[i] = arr[left2++];
+		}
+	}
+
+	while (left1 < mid)
+	{
+		helper[i++] = arr[left1++];
+	}
+
+	while (left2 < end)
+	{
+		helper[i++] = arr[left2++];
+	}
+
+	for (int j = start; j < end; ++j)
+	{
+		arr[j] = helper[j];
+	}
+
+}
+
+void merge_sort(long long* arr, long long* helper, long long leftLim, long long rightLim)
+{
+	if (leftLim + 1 < rightLim)
+	{
+
+		long long middle = (leftLim + rightLim) / 2;
+		merge_sort(arr, helper, leftLim, middle);
+		merge_sort(arr, helper, middle, rightLim);
+		merge(arr, helper, leftLim, middle, rightLim);
+	}
+
+}
+
 int main()
 {
 	std::ios_base::sync_with_stdio(false);
 	std::cin.tie(NULL);
-	int monsterCount = 0;
-	int blastPower = 0;
+	long long monsterCount = 0;
+	long long blastPower = 0;
 
 	cin >> monsterCount;
 
@@ -18,42 +69,47 @@ int main()
 
 
 	//vector<int> monsters;
-	int* monsters = new int[monsterCount];
+	long long* monsters = new long long[monsterCount];
 
-	int index = 0;
-	for (int i = 0; i < monsterCount; ++i)
+	long long index = 0;
+	for (long long i = 0; i < monsterCount; ++i)
 	{
 		cin >> index;
 		//monsters.push_back(index);
 		monsters[i] = index;
 	}
+	long long* helper = new long long[monsterCount];
+	merge_sort(monsters, helper, 0, monsterCount);
 
-	int max = monsters[0];
-	int numberOfShots = 0;
-	while (max > 0)
+	long long maxIndex = monsterCount - 1;
+	long long max = monsters[maxIndex];
+	long long numberOfShots = 0;
+	long long maxCounter = 0;
+	bool posExists = true;
+	while (posExists)
 	{
-		max = 0;
-		for (int i = 0; i < monsterCount; ++i)
+		max = monsters[maxIndex];
+		maxCounter = 0;
+		posExists = false;
+		for (long long i = 0; i < monsterCount; ++i)
 		{
-			if (monsters[i] > max)
-			{
-				max = monsters[i];
-			}
 
-		}
-
-		for (int i = 0; i < monsterCount; ++i)
-		{
 			if (monsters[i] == max)
 			{
 				monsters[i] = 0;
+				maxCounter++;
+
+			}
+			if(monsters[i]>0)
+			{
+				posExists = true;
 			}
 			monsters[i] -= blastPower;
 		}
-
+		maxIndex -= maxCounter;
 		numberOfShots++;
 	}
-	cout << numberOfShots - 1;
+	std::cout << numberOfShots-1;
 
 
 }
