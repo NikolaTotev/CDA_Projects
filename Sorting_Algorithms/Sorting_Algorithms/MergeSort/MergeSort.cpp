@@ -53,7 +53,8 @@ void merge_sort(int* arr, int* helper,  int leftLim, int rightLim)
 
 int main()
 {
-	int arr_1[10] = { 7,5,3,2,6,2,3,4,1,2 };
+	//int arr_1[10] = { 7,5,3,2,6,2,3,4,1,2 };
+	int arr_1[10] = { 9, 8,7,6,5,4,3,2,1,0 };
 	int mid = 10 / 2;
 	int* helper = new int[10];
 

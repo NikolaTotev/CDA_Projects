@@ -35,7 +35,7 @@ int main()
 	}
 
 	int activityCounter = 1;
-	int currentSum  = activityInfo[0][0] + activityInfo[0][1];;
+	int currentSum  = activityInfo[0][1] + activityInfo[0][0];;
 	for (int i = 0; i < numberOfActivities-1; ++i)
 	{
 		
