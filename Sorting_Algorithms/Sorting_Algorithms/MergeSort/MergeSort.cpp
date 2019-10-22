@@ -33,6 +33,7 @@ void merge(int* arr, int* helper, int start,   int mid, int end)
 
 	for (int j = start; j < end; ++j)
 	{
+		cout << helper[j] << " ";
 		arr[j] = helper[j];
 	}
 
@@ -61,8 +62,8 @@ int main()
 	merge_sort(arr_1, helper, 0, 10);
 	delete[] helper;
 
-	for (int i = 0; i < 10; ++i)
+	/*for (int i = 0; i < 10; ++i)
 	{
-		cout << arr_1[i] << endl;
-	}
+		cout << arr_1[i] << " ";
+	}*/
 }
