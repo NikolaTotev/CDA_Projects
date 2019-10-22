@@ -1,17 +1,17 @@
 #include <iostream>
 #include <algorithm>
 using namespace std;
-void merge(int* arr, int* helper, int start,   int mid, int end)
+void merge(int* arr, int* helper, int start, int mid, int end)
 {
-	
+
 	int left1 = start;
 	int left2 = mid;
 	int i = start;
 
-	for (; left1 < mid && left2<end; ++i)
+	for (; left1 < mid && left2 < end; ++i)
 
 	{
-		if(arr[left1]<= arr[left2])
+		if (arr[left1] <= arr[left2])
 		{
 			helper[i] = arr[left1++];
 		}
@@ -21,11 +21,11 @@ void merge(int* arr, int* helper, int start,   int mid, int end)
 		}
 	}
 
-	while(left1 < mid)
+	while (left1 < mid)
 	{
 		helper[i++] = arr[left1++];
 	}
-	
+
 	while (left2 < end)
 	{
 		helper[i++] = arr[left2++];
@@ -39,17 +39,17 @@ void merge(int* arr, int* helper, int start,   int mid, int end)
 
 }
 
-void merge_sort(int* arr, int* helper,  int leftLim, int rightLim)
+void merge_sort(int* arr, int* helper, int leftLim, int rightLim)
 {
-	if (leftLim + 1< rightLim)
+	if (leftLim + 1 < rightLim)
 	{
 
 		int middle = (leftLim + rightLim) / 2;
 		merge_sort(arr, helper, leftLim, middle);
 		merge_sort(arr, helper, middle, rightLim);
-		merge(arr, helper,  leftLim, middle, rightLim);
+		merge(arr, helper, leftLim, middle, rightLim);
 	}
-	
+
 }
 
 int main()
@@ -62,8 +62,8 @@ int main()
 	merge_sort(arr_1, helper, 0, 10);
 	delete[] helper;
 
-	/*for (int i = 0; i < 10; ++i)
+	for (int i = 0; i < 10; ++i)
 	{
 		cout << arr_1[i] << " ";
-	}*/
+	}
 }

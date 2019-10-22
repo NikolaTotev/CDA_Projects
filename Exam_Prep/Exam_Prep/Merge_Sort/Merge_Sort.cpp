@@ -8,55 +8,56 @@ void printArr(int* mainArray, int start, int length)
 		cout << mainArray[i] << " ";
 	}
 }
-void merge(int* mainArray, int* helper, int start, int middle, int length)
+
+void merge(int* arr, int* helper, int start, int mid, int end)
 {
+
 	int left1 = start;
-	int left2 = middle;
+	int left2 = mid;
 	int i = start;
 
-	for (; left1 < middle && left2 < length; ++i)
+	for (; left1 < mid && left2 < end; ++i)
+
 	{
-		if (mainArray[left1] <= mainArray[left2])
+		if (arr[left1] <= arr[left2])
 		{
-			helper[i] = mainArray[left1++];
+			helper[i] = arr[left1++];
 		}
 		else
 		{
-			helper[i] = mainArray[left2++];
+			helper[i] = arr[left2++];
 		}
 	}
 
-	while (left1 < middle)
+	while (left1 < mid)
 	{
-		helper[i++] = mainArray[left1++];
-
+		helper[i++] = arr[left1++];
 	}
 
-	while (left2 < length)
+	while (left2 < end)
 	{
-		helper[i++] = mainArray[left2++];
+		helper[i++] = arr[left2++];
 	}
 
-	for (int j = 0; j < length; ++j)
+	for (int j = start; j < end; ++j)
 	{
-		//out << helper[j] << " ";
-		mainArray[j] = helper[j];
+		arr[j] = helper[j];
 	}
+
 }
-void merge_sort(int* mainArray, int* helper, int start, int length)
+
+void merge_sort(int* arr, int* helper, int leftLim, int rightLim)
 {
-	if (start  < length)
+	if (leftLim + 1 < rightLim)
 	{
-		int middle = (start + length) / 2;
-		merge_sort(mainArray, helper, start, middle);
-		printArr(mainArray, start, middle);
 
-		merge_sort(mainArray, helper, middle+1, length);
-		printArr(mainArray, middle+1, length);
-		merge(mainArray, helper, start, middle, length);
+		int middle = leftLim + (leftLim - rightLim) / 2;
+		merge_sort(arr, helper, leftLim, middle);
+		merge_sort(arr, helper, middle, rightLim);
+		merge(arr, helper, leftLim, middle, rightLim);
 	}
+	printArr(arr, leftLim, rightLim);
 }
-
 int main()
 {
 	int length = 0;
@@ -71,8 +72,6 @@ int main()
 	}
 
 	merge_sort(mainArray, helper, 0, length);
-	printArr(mainArray, 0, length);
-
 	for (int i = 0; i < length; ++i)
 	{
 		//cout << mainArray[i] << endl;
