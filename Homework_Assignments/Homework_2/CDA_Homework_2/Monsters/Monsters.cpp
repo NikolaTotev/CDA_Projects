@@ -86,30 +86,33 @@ int main()
 	long long numberOfShots = 0;
 	long long maxCounter = 0;
 	bool posExists = true;
-	while (posExists)
+
+
+	
+	while (max > 0)
 	{
 		max = monsters[maxIndex];
+		// << max << "MAX" << endl;
 		maxCounter = 0;
-		posExists = false;
-		for (long long i = 0; i < monsterCount; ++i)
-		{
+		numberOfShots++;
 
-			if (monsters[i] == max)
+		for (int i = 0; i <=maxIndex; ++i)
+		{
+			if (monsters[i] != max)
+			{
+				monsters[i] -= blastPower;
+			}
+			else
 			{
 				monsters[i] = 0;
 				maxCounter++;
-
 			}
-			if(monsters[i]>0)
-			{
-				posExists = true;
-			}
-			monsters[i] -= blastPower;
+			maxIndex -= maxCounter;
 		}
-		maxIndex -= maxCounter;
-		numberOfShots++;
+
 	}
-	std::cout << numberOfShots-1;
+	
+	std::cout << numberOfShots - 1;
 
 
 }

@@ -1,5 +1,6 @@
 #include <iostream>
 #include <algorithm>
+//Merge
 using namespace std;
 void merge(int* arr, int* helper, int start, int mid, int end)
 {
@@ -33,7 +34,6 @@ void merge(int* arr, int* helper, int start, int mid, int end)
 
 	for (int j = start; j < end; ++j)
 	{
-		cout << helper[j] << " ";
 		arr[j] = helper[j];
 	}
 
