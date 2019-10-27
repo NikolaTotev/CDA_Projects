@@ -77,39 +77,45 @@ int main()
 
 	merge_sort(info, helper, 0, numberOfTrucks);
 
-	longBoi tempMin = 0;
-	longBoi currentMin = 0 ;
-	longBoi currentOffset = 0;
-	
-	for (int i = 0; i < numberOfTrucks; ++i)
-	{
-		
-		for (int j = i+1; j < numberOfTrucks; ++j)
-		{
-			currentOffset = abs(info[j].offset) - abs(info[i].offset);
 
-			if(i == 0)
+	longBoi tempMin = 0;
+	longBoi currentMin = 0;
+	longBoi currentOffset = 0;
+
+	for (longBoi i = 0; i < numberOfTrucks; ++i)
+	{
+
+		for (longBoi j = 0; j < numberOfTrucks; ++j)
+		{
+			if (i != j)
 			{
+
+				currentOffset = abs(info[j].offset - info[i].offset);
+
+
 				tempMin += currentOffset * info[j].numberOfDrinksToMove;
-			}
-			if(tempMin > currentMin)
-			{
-				break;
+
+
+				if (tempMin > currentMin && i != 0)
+				{
+					break;
+				}
 			}
 		}
 
-		if(i == 0)
+		if (i == 0)
 		{
 			currentMin = tempMin;
 		}
 		else
 		{
-			if(tempMin < currentMin)
+			if (tempMin < currentMin)
 			{
 				currentMin = tempMin;
 			}
 		}
+		tempMin = 0;
 	}
 	cout << currentMin;
-	
+
 }

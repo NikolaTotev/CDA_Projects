@@ -111,12 +111,10 @@ int main()
 
 	if(numberOfCows == 2)
 	{
-		cout < houseCords[numberOfHouses - 1] - houseCords[0];
-		return;
+		cout <<houseCords[numberOfHouses - 1] - houseCords[0];
+		return 0;
 	}
 	cout << minDistance(houseCords, numberOfHouses, numberOfCows);
-
-
 }
 
 
