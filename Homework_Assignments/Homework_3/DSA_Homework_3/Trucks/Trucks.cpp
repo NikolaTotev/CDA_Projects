@@ -17,7 +17,7 @@ void merge(truckInfo* arr, truckInfo* helper, longBoi start, longBoi mid, longBo
 	for (; left1 < mid && left2 < end; ++i)
 
 	{
-		if (arr[left1].numberOfDrinksToMove <= arr[left2].numberOfDrinksToMove)
+		if (arr[left1].offset <= arr[left2].offset)
 		{
 			helper[i] = arr[left1++];
 		}
@@ -77,15 +77,16 @@ int main()
 
 	merge_sort(info, helper, 0, numberOfTrucks);
 
-	longBoi numberOfDrinksNeeded = 0;
-
-	longBoi distanceToMostExpensive = 0;
-	for (longBoi i = 0; i < numberOfTrucks; ++i)
+	longBoi numberOfDrinksNeeded = 0; 
+	longBoi currentMin = 0 ;
+	longBoi temp = 0;
+	for (int i = 0; i < numberOfTrucks; ++i)
 	{
-		distanceToMostExpensive = info[numberOfTrucks - 1].offset - info[i].offset;
-		numberOfDrinksNeeded += info[i].numberOfDrinksToMove * distanceToMostExpensive;
+		for (int i = 0; i < UPPER; ++i)
+		{
+			
+		}
 	}
-
 	cout << numberOfDrinksNeeded;
 	
 }
