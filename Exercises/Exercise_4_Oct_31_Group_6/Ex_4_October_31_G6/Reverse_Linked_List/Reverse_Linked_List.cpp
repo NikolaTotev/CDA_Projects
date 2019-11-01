@@ -3,7 +3,8 @@
 int main()
 {
 	std::cout << "Hello World!\n";
-	/*Swap head and tail, then reverse the ones in between.
+	/*
+	 *Swap head and tail, then reverse the ones in between.
 	 *In order to reverse the ones in between we need a total of 3 pointers.
 	 *
 	 *We start from the second element of the initial list.
@@ -31,11 +32,11 @@ Node* reverse(Node* head)
 	head->next = nullptr;
 
 	while (current!= nullptr)
-	{
+	
 		Node* next = current->next;
 		current->next = last;
 		last = current;
-		current = next;
+		current =next;
 	}
 	return last;
 }
