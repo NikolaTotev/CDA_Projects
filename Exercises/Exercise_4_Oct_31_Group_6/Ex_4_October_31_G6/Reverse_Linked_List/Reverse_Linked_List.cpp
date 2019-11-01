@@ -32,11 +32,11 @@ Node* reverse(Node* head)
 	head->next = nullptr;
 
 	while (current!= nullptr)
-	
+	{
 		Node* next = current->next;
 		current->next = last;
 		last = current;
-		current =next;
+		current = next;
 	}
 	return last;
 }
