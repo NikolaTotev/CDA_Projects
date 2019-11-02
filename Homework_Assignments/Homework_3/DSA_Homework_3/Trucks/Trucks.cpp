@@ -48,13 +48,16 @@ int main()
 	longBoi currentMin = 0;
 	while(right >=left)
 	{
-		longBoi middle1 = left + (right - left) / 3;
-		longBoi middle2 = right - (right - left) / 3;
+		longBoi middle1 = (2*left+right) / 3;
+		longBoi middle2 = (left+2*right) / 3;
 
 		for (int i = 0; i < numberOfTrucks; ++i)
 		{
+			if(middle1 > 0 && middle2>0)
+			{				
 			numberOfDrinksM1 += (info[i].offset - middle1) * info[i].numberOfDrinksToMove;
 			numberOfDrinksM2 += (info[i].offset - middle2) * info[i].numberOfDrinksToMove;
+			}
 		}
 
 		if(numberOfDrinksM1 < numberOfDrinksM2)

@@ -7,65 +7,25 @@ struct truckInfo
 	longBoi numberOfDrinksToMove;
 };
 
-void merge(truckInfo* arr, truckInfo* helper, longBoi start, longBoi mid, longBoi end)
-{
-
-	longBoi left1 = start;
-	longBoi left2 = mid;
-	longBoi i = start;
-
-	for (; left1 < mid && left2 < end; ++i)
-
-	{
-		if (arr[left1].offset <= arr[left2].offset)
-		{
-			helper[i] = arr[left1++];
-		}
-		else
-		{
-			helper[i] = arr[left2++];
-		}
-	}
-
-	while (left1 < mid)
-	{
-		helper[i++] = arr[left1++];
-	}
-
-	while (left2 < end)
-	{
-		helper[i++] = arr[left2++];
-	}
-
-	for (int j = start; j < end; ++j)
-	{
-		arr[j] = helper[j];
-	}
-
-}
-
-void merge_sort(truckInfo* arr, truckInfo* helper, longBoi leftLim, longBoi rightLim)
-{
-	if (leftLim + 1 < rightLim)
-	{
-
-		longBoi middle = (leftLim + rightLim) / 2;
-		merge_sort(arr, helper, leftLim, middle);
-		merge_sort(arr, helper, middle, rightLim);
-		merge(arr, helper, leftLim, middle, rightLim);
-	}
-
-}
 int main()
 {
 	longBoi numberOfTrucks;
 	cin >> numberOfTrucks;
 
+	
+
 	truckInfo* info = new truckInfo[numberOfTrucks];
 	truckInfo* helper = new truckInfo[numberOfTrucks];
 
+	if (numberOfTrucks == 0 || numberOfTrucks == 1 )
+	{
+		cout << 0;
+		return 0;
+	}
 	longBoi offset = 0;
 	longBoi numberOfDrinks;
+	longBoi numberOfDrinksM1 = 0;
+	longBoi numberOfDrinksM2 = 0;
 
 	for (longBoi i = 0; i < numberOfTrucks; ++i)
 	{
@@ -75,41 +35,65 @@ int main()
 		info[i].numberOfDrinksToMove = numberOfDrinks;
 	}
 
-	merge_sort(info, helper, 0, numberOfTrucks);
 
-	longBoi tempMin = 0;
-	longBoi currentMin = 0;
-	longBoi currentOffset = 0;
+	longBoi maxOffset = info[0].offset;
+	longBoi minOffset = info[0].offset;
 
-	for (int i = 0; i < numberOfTrucks; ++i)
+	for (longBoi i = 1; i < numberOfTrucks; ++i)
 	{
-
-		for (int j = i + 1; j < numberOfTrucks; ++j)
+		if (info[i].offset > maxOffset)
 		{
-			currentOffset = abs(info[j].offset - info[i].offset);
+			maxOffset = info[i].offset;
+		}
+		if (info[i].offset < minOffset)
+		{
+			minOffset = info[i].offset;
+		}
+	}
 
-			if (i == 0)
-			{
-				tempMin += currentOffset * info[j].numberOfDrinksToMove;
-			}
-			if (tempMin > currentMin)
-			{
-				break;
-			}
+	longBoi left = minOffset;
+	longBoi right = maxOffset;
+	longBoi currentMin = -1;
+
+	while (left <= right)
+	{
+		longBoi middle1 = left + (right - left) / 3;
+		longBoi middle2 = right - (right - left) / 3;
+
+		for (longBoi i = 0; i < numberOfTrucks; ++i)
+		{
+			numberOfDrinksM1 += abs((info[i].offset - middle1) * info[i].numberOfDrinksToMove);
+			numberOfDrinksM2 += abs((info[i].offset - middle2) * info[i].numberOfDrinksToMove);
 		}
 
-		if (i == 0)
+		if (numberOfDrinksM1 < numberOfDrinksM2)
 		{
-			currentMin = tempMin;
+			right = middle2 - 1;
+
+			if (numberOfDrinksM1 < currentMin || currentMin == -1)
+			{
+				currentMin = numberOfDrinksM1;
+			}
+		}
+		else if (numberOfDrinksM1 > numberOfDrinksM2)
+		{
+			left = middle1 + 1;
+			if (numberOfDrinksM2 < currentMin || currentMin == -1)
+			{
+				currentMin = numberOfDrinksM2;
+			}
 		}
 		else
 		{
-			if (tempMin < currentMin)
+			left = middle1 + 1;
+			right = middle2 - 1;
+			if (currentMin > numberOfDrinksM2)
 			{
-				currentMin = tempMin;
+				currentMin = numberOfDrinksM2;
 			}
 		}
+		numberOfDrinksM1 = 0;
+		numberOfDrinksM2 = 0;
 	}
 	cout << currentMin;
-
 }
