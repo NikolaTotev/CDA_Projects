@@ -45,38 +45,56 @@ int main()
 		cout << endl;
 	}*/
 #pragma endregion 
-	bool isPossible = true;
 
-	stack<longBoi> temp;
-	longBoi lastPushed = 0;
+	stack<longBoi> street;
+	longBoi lastPushed = -1;
+	longBoi rightElement = 0;
+	longBoi counter = 1;
+	bool continueCheck = true;
 	for (longBoi i = 0; i < numberOfCases; ++i)
 	{
-		for (longBoi j = 0; j < cases[i].numberOfTrucks - 1; ++j)
+		for (longBoi j = 0; j < cases[i].numberOfTrucks && continueCheck; j++)
 		{
-			if (cases[i].truckNumbers[j] > cases[i].truckNumbers[j + 1])
+			if(cases[i].truckNumbers[j]!= counter)
 			{
-				if (j != 0)
+				if (street.empty())
 				{
-					if (cases[i].truckNumbers[j] > lastPushed)
-					{
-						cout << "no" << endl;
-						isPossible = false;
-					}
-				}
-				lastPushed = cases[i].truckNumbers[j];
-				temp.push(lastPushed);
-			}
 
+					street.push(cases[i].truckNumbers[j]);
+					lastPushed = cases[i].truckNumbers[j];
+				}
+				else if(lastPushed == counter)
+				{
+					street.pop();
+					counter++;
+				}
+				else if(cases[i].truckNumbers[j] < lastPushed)
+				{
+					street.push(cases[i].truckNumbers[j]);
+					lastPushed =cases[i].truckNumbers[j];
+				}
+				else
+				{
+					//Return that you cant sort this thing
+					cout << "no" << endl;
+					continueCheck = false;
+				}
+			}
+			else if(cases[i].truckNumbers[j] == counter)
+			{
+				rightElement = cases[i].truckNumbers[j];
+				counter++;
+			}
 		}
-		if (isPossible)
+		if(continueCheck)
 		{
-			cout << "yes" << endl;			
+			//Return that you can sort it.
+			cout << "yes" << endl;
 		}
-		isPossible = true;
-		while(!temp.empty())
-		{
-			temp.pop();
-		}
+		counter = 1;
+		rightElement = 0;
+		lastPushed = -1;
+		continueCheck = true;
 	}
 	return 0;
 }
