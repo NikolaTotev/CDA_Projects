@@ -5,44 +5,32 @@
 
 int main()
 {
-    std::cout << "Hello World!\n";
+	std::cout << "Hello World!\n";
 }
 
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
-struct ListNode
+  int binarySearch (int* mainArray, int left, int right, int arrSize, int thingToFind)
 {
-	int data;
-	ListNode* next;
-};
+	  int right = arrSize;
+	  int left = 0;
+	  int middle = (right + left) / 2;
 
-void revList(ListNode* head)
-{
-	if(head == nullptr)
+	
+	while(left <= right)
 	{
-		//return head;
+		middle = (right + left) / 2;
+
+		if (mainArray[middle] == thingToFind)
+		{
+			return middle;
+		}
+		if(thingToFind < mainArray[middle])
+		{
+			right = middle-1;
+		}
+		else if (thingToFind > mainArray[middle])
+		{
+			left = middle+1;
+		}
 	}
-	ListNode* current = head->next;
-	ListNode* last = head;
-
-	head = nullptr;
-	ListNode* next;
-	while(current!=nullptr)
-	{
-		next = current->next;
-		current->next = last;
-		last = current;
-		current = next;
-	}
-
-	//return last;
-
+	return -1;
 }
