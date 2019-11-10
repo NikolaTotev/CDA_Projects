@@ -29,10 +29,9 @@ namespace Optimal_Teams
             string rawNumbers = Console.ReadLine();
             string Fixed = rawNumbers.Trim(' ');
             string[] numbers = Fixed.Split(' ');
-            
+
             List<longBoi> studentSkills = Array.ConvertAll(numbers, longBoi.Parse).ToList();
             List<longBoi> sortedSkills = Array.ConvertAll(numbers, longBoi.Parse).ToList();
-            List<longBoi> tempList = Array.ConvertAll(numbers, longBoi.Parse).ToList();
             sortedSkills.Sort();
 
             Dictionary<int, longBoi> studentInfo = new Dictionary<int, longBoi>();
@@ -41,73 +40,94 @@ namespace Optimal_Teams
                 studentInfo.Add(sortedSkills[i], studentSkills.IndexOf(sortedSkills[i]));
             }
 
-            longBoi studentsPlaced = 0;
             bool isIvansTurn = true;
 
-            while (studentsPlaced < numberOfStudents)
+            List<longBoi> team1 = new List<int>();
+            List<longBoi> team2 = new List<int>();
+
+            longBoi studentsPicked = 0;
+            longBoi currentMax = sortedSkills[sortedSkills.Count - 1];
+            longBoi currentMaxIndex;
+            studentInfo.TryGetValue(currentMax, out currentMaxIndex);
+            longBoi studentsCurrentlyPicked = 0;
+            bool currentMaxChanged = false;
+            while (studentsPicked < numberOfStudents)
             {
-                longBoi currentMax = studentInfo.ElementAt(studentInfo.Count - 1).Key;
-                longBoi indexOfCurrentMax = studentInfo.ElementAt(studentInfo.Count - 1).Value;
-                studentInfo.Remove(currentMax);
-                if (!isIvansTurn)
+                if (!team1.Contains(currentMax) && !team2.Contains(currentMax))
                 {
-                    studentSkills[indexOfCurrentMax] = -2;
-                }
-                else
-                {
-                    studentSkills[indexOfCurrentMax] = -1;
+                    if (!isIvansTurn)
+                    {
+                        team2.Add(currentMax);
+                    }
+                    else
+                    {
+                        team1.Add(currentMax);
+                    }
+
+                    studentsPicked++;
                 }
 
-                studentsPlaced++;
-                for (int i = indexOfCurrentMax + 1; i <= indexOfCurrentMax + selectionRange && i < tempList.Count; i++)
+                for (int i = currentMaxIndex + 1; studentsCurrentlyPicked < selectionRange && i < studentSkills.Count; i++)
                 {
-                    if (studentSkills[i] != -1 && studentSkills[i] != -2)
+                    if (!team1.Contains(studentSkills[i]) && !team2.Contains(studentSkills[i]))
                     {
-                        studentInfo.Remove(studentSkills[i]);
-                        tempList.Remove(studentSkills[i]);
                         if (!isIvansTurn)
                         {
-                            studentSkills[i] = -2;
+                            team2.Add(studentSkills[i]);
+
                         }
                         else
                         {
-                            studentSkills[i] = -1;
+                            team1.Add(studentSkills[i]);
                         }
-                        studentsPlaced++;
-                        //continue;
-                    }
 
-                  //  break;
+                        studentsCurrentlyPicked++;
+                        studentsPicked++;
+                    }
                 }
 
-                for (int i = indexOfCurrentMax - 1; i >= indexOfCurrentMax - selectionRange && i >= 0; i--)
+                studentsCurrentlyPicked = 0;
+                for (int i = currentMaxIndex - 1; studentsCurrentlyPicked < selectionRange && i >= 0; i--)
                 {
-                    if (studentSkills[i] != -1 && studentSkills[i] != -2)
+                    if (!team1.Contains(studentSkills[i]) && !team2.Contains(studentSkills[i]))
                     {
-                        studentInfo.Remove(studentSkills[i]);
-
                         if (!isIvansTurn)
                         {
-                            studentSkills[i] = -2;
+                            team2.Add(studentSkills[i]);
+
                         }
                         else
                         {
-                            studentSkills[i] = -1;
+                            team1.Add(studentSkills[i]);
                         }
 
-                        studentsPlaced++;
-                        //continue;
+                        studentsCurrentlyPicked++;
+                        studentsPicked++;
                     }
-
-                   // break;
+                }
+                studentsCurrentlyPicked = 0;
+                currentMaxChanged = false;
+                if (studentsPicked < numberOfStudents || !currentMaxChanged)
+                {
+                    for (int i = sortedSkills.Count - 1; i >= 0; i--)
+                    {
+                        if (!team1.Contains(sortedSkills[i]) && !team2.Contains(sortedSkills[i]))
+                        {
+                            if (!currentMaxChanged)
+                            {
+                                currentMax = sortedSkills[i];
+                                currentMaxChanged = true;
+                                studentInfo.TryGetValue(currentMax, out currentMaxIndex);
+                            }
+                        }
+                    }
                 }
 
                 isIvansTurn = !isIvansTurn;
             }
-
             foreach (var skill in studentSkills)
             {
-                if (skill == -1)
+                if (team1.Contains(skill))
                 {
                     Console.Write(1);
                 }
@@ -116,7 +136,7 @@ namespace Optimal_Teams
                     Console.Write(2);
                 }
             }
-        }//Main end
+        }
 
     }
 }

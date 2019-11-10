@@ -45,12 +45,6 @@ namespace Prarallel_Jungle
                 currentHeight = numbers[i];
                 treeHeights.Add(currentHeight);
             }
-
-            Thread firstHalf;
-            firstHalf.Start();
-            Thread secondHalf;
-            Thread thirdHalf;
-
         }
     }
 }
