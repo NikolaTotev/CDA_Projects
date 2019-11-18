@@ -1,4 +1,5 @@
 #include <iostream>
+#include <queue>
 using namespace std;
 
 struct TreeNode
@@ -151,6 +152,36 @@ private:
 		}
 	}
 
+	void printPostOrder(TreeNode* current)
+	{
+		if (current)
+		{
+			printPostOrder(current->rightChild);
+			printPostOrder(current->leftChild);
+			cout << current->data << ", ";
+		}
+	}
+
+	void printElementsPerLevel(TreeNode* root)
+	{
+		queue<TreeNode*> q;
+		q.push(root);
+		while (q.size() > 0)
+		{
+			TreeNode* n = q.front();
+			cout << q.size();
+			q.pop();
+			if (n->leftChild)
+			{
+				q.push(n->leftChild);
+			}
+			if (n->rightChild)
+			{
+				q.push(n->rightChild);
+			}
+			
+			}
+	}
 public:
 	BinarySearchTree() = default;
 	BinarySearchTree(const BinarySearchTree* rhsTree)
@@ -198,24 +229,26 @@ public:
 		printInOrder(root);
 		cout << '\n';
 	}
+
+	void ElementsPerLevel()
+	{
+		printElementsPerLevel(root);
+	}
+	
 };
 
 int main()
 {
-	BinarySearchTree newTree;
+	BinarySearchTree newTree; 
 
-	newTree.Insert(41);
-	newTree.Insert(20);
+	newTree.Insert(5);
+	newTree.Insert(10);
+	newTree.Insert(5);
+	newTree.Insert(12);
 	newTree.Insert(11);
-	newTree.Insert(29);
-	newTree.Insert(32);
-	newTree.Insert(65);
-	newTree.Insert(50);
-	newTree.Insert(91);
-	newTree.Insert(72);
-	newTree.Insert(99);
+	newTree.Insert(13);
 
-	newTree.PrintInOrder();
+	newTree.ElementsPerLevel();
 
 	newTree.Remove(65);
 
