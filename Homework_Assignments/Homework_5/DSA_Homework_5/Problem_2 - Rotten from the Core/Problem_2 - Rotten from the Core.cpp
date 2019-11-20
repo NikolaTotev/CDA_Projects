@@ -2,196 +2,203 @@
 #include <queue>
 using  namespace std;
 
+bool rottenAppleMap[10001][10001];
 struct Apple
 {
 	bool isRotten = false;
 	int dayID;
-	int coord_X;
-	int coord_Y;
+	int coordVertical;
+	int coordHorizontal;
+
+	Apple(int vert = 0, int horiz = 0, int day = 0)
+	{
+		dayID = day;
+		coordVertical = vert;
+		coordHorizontal = horiz;
+	}
+
 };
-void print(Apple** apples, int numberOfRows, int numberOfColumns)
+void print(int numberOfRows, int numberOfColumns)
 {
+	int counter = 0;
 	for (int i = numberOfRows - 1; i >= 0; --i)
 	{
 		for (int j = 0; j < numberOfColumns; ++j)
 		{
-			if (apples[i][j].isRotten)
+
+			cout << rottenAppleMap[i][j] << " ";
+			if(rottenAppleMap[i][j])
 			{
-				cout << "[" << "=" << ", " << "=" << "]";
-			}
-			else
-			{
-				cout << "[" << apples[i][j].coord_X << ", " << apples[i][j].coord_Y << "]";
+				counter++;
 			}
 
 		}
 		cout << endl;
 	}
+	cout << "Number of rotten apples = " << counter;
+
 	cout << endl;
 	cout << endl;
 }
-int main()
+bool isValid(int coordVert, int coordHoriz)
 {
-	int numberOfRows;
-	int numberOfColumns;
-	int numberOfDays;
-	cin >> numberOfRows;
-	cin >> numberOfColumns;
-	cin >> numberOfDays;
-	int totalAmountOfApples = numberOfRows * numberOfColumns;
-
-	Apple** apples = new Apple * [numberOfRows];
-	for (int i = 0; i < numberOfRows; ++i)
+	if (coordVert > 10001 || coordVert < 0)
 	{
-		apples[i] = new Apple[numberOfColumns];
+		return false;
 	}
+	if (coordHoriz > 10001 || coordHoriz < 0)
+	{
+		return false;
+	}
+	if (rottenAppleMap[coordVert][coordHoriz])
+	{
+		return false;
+	}
+	return true;
+}
 
-	for (int i = 0; i < numberOfRows; ++i)
+int calculateRemainingApples(int numberOfRows, int numberOfColumns, int totalApples)
+{
+	int counter = 0;
+	for (int i = numberOfRows - 1; i >= 0; --i)
 	{
 		for (int j = 0; j < numberOfColumns; ++j)
 		{
-			Apple newApple;
-			newApple.isRotten = false;
-			newApple.coord_X = i;
-			newApple.coord_Y = j;
-			newApple.dayID = 1;
-			apples[i][j] = newApple;
+			if (rottenAppleMap[i][j])
+			{
+				counter++;
+			}
+
 		}
 	}
 
+	return counter;
+}
+int main()
+{
+	bool shouldIPrint = true;
+	int numberOfRows;
+	int numberOfColumns;
+	int totalDays;
+	cin >> numberOfRows;
+	cin >> numberOfColumns;
+	cin >> totalDays;
+	int totalAmountOfApples = numberOfRows * numberOfColumns;
 
-
-
-	Apple rottenApple_1;
-	rottenApple_1.dayID = 1;
-	rottenApple_1.isRotten = true;
-	Apple rottenApple_2;
-	rottenApple_2.dayID = 1;
-	rottenApple_2.isRotten = true;
-
-
-
-
-	int coordX;
-	int coordY;
+	int coordVertical;
+	int coordHorizontal;
 	int day = 1;
 
-	queue<Apple> rottenApples;
-	while (cin >> coordX >> coordY)
+	Apple firstRotten;
+	Apple secondRotten;
+
+	queue<Apple> applesToRot;
+
+	while (cin >> coordVertical >> coordHorizontal)
 	{
-		if (day != 1)
+		int modifiedVert = coordVertical - 1;
+		int modifiedHoriz = coordHorizontal - 1;
+		if (day == 1)
 		{
-			rottenApple_2.coord_X = coordX;
-			rottenApple_2.coord_Y = coordY;
-			apples[coordX][coordY] = rottenApple_2;
-			rottenApples.push(rottenApple_1);
-			totalAmountOfApples--;
+			rottenAppleMap[modifiedVert][modifiedHoriz] = true;
+
+			firstRotten.coordVertical = modifiedVert;
+			firstRotten.coordHorizontal = modifiedHoriz;
+			firstRotten.dayID = 1;
+			applesToRot.push(firstRotten);
+			day++;
+			continue;
 		}
-		rottenApple_1.coord_X = coordX;
-		rottenApple_1.coord_Y = coordY;
-		apples[coordX][coordY] = rottenApple_1;
-		totalAmountOfApples--;
-		day++;
+		rottenAppleMap[modifiedVert][modifiedHoriz] = true;
+
+		secondRotten.coordVertical = modifiedVert;
+		secondRotten.coordHorizontal = modifiedHoriz;
+		secondRotten.dayID = 1;
+		applesToRot.push(secondRotten);
 	}
 
-	print(apples, numberOfRows, numberOfColumns);
-
-	Apple currentApple;
-	int currentDay = 1;
-	while (!rottenApples.empty())
+	int currentDay = 0;
+	while (!applesToRot.empty() && currentDay <= totalDays)
 	{
-		currentApple = rottenApples.front();
+		Apple currentApple = applesToRot.front();
+
 		if (currentApple.dayID > currentDay)
 		{
 			currentDay = currentApple.dayID;
 		}
 
+		int upChange = currentApple.coordVertical + 1;
+		int downChange = currentApple.coordVertical - 1;
+		int leftChange = currentApple.coordHorizontal - 1;
+		int rightChange = currentApple.coordHorizontal + 1;
 
-		///Rot to the top OK
-		if (currentApple.coord_X + 1 <= numberOfRows)
+		Apple upApple(upChange, currentApple.coordHorizontal, currentApple.dayID + 1);
+		Apple downApple(downChange, currentApple.coordHorizontal, currentApple.dayID + 1);
+		Apple leftApple(currentApple.coordVertical, leftChange, currentApple.dayID + 1);
+		Apple rightApple(currentApple.coordVertical, rightChange, currentApple.dayID + 1);
+
+		if (isValid(upApple.coordVertical, upApple.coordHorizontal))
 		{
-			Apple& topApple = apples[currentApple.coord_X+1][currentApple.coord_Y];
-
-			if (!topApple.isRotten)
+			rottenAppleMap[upApple.coordVertical][upApple.coordHorizontal] = true;
+			upApple.dayID = currentApple.dayID + 1;
+			if (currentDay < totalDays)
 			{
-				topApple.isRotten = true;
-				topApple.dayID = currentDay + 1;
-				totalAmountOfApples--;
-
-				if (currentDay <= numberOfDays)
-				{
-					rottenApples.push(topApple);
-				}
+				applesToRot.push(upApple);
 			}
-			print(apples, numberOfRows, numberOfColumns);
-			
-		}
 
-		///Rot to the bottom OK
-		if (currentApple.coord_X -1 >0)
-		{
-			Apple& bottomApple = apples[currentApple.coord_X-1][currentApple.coord_Y];
-
-			if (!bottomApple.isRotten)
+			if (shouldIPrint)
 			{
-				bottomApple.isRotten = true;
-				bottomApple.dayID = currentDay + 1;
-				totalAmountOfApples--;
-
-				if (currentDay <= numberOfDays)
-				{
-					rottenApples.push(bottomApple);
-				}
+				print(numberOfRows, numberOfColumns);
 			}
-			print(apples, numberOfRows, numberOfColumns);
 
 		}
 
-		///Rot to the left; // goes up instead
-		if (currentApple.coord_Y - 1 >= 0)
+		if (isValid(downApple.coordVertical, downApple.coordHorizontal))
 		{
-			Apple& leftApple = apples[currentApple.coord_X][currentApple.coord_Y-1];
 
-			if (!leftApple.isRotten)
+			rottenAppleMap[downApple.coordVertical][downApple.coordHorizontal] = true;
+			if (currentDay < totalDays)
 			{
-				leftApple.isRotten = true;
-				leftApple.dayID = currentDay + 1;
-				totalAmountOfApples--;
-
-				if (currentDay <= numberOfDays)
-				{
-					rottenApples.push(leftApple);
-				}
+				applesToRot.push(downApple);
 			}
-			print(apples, numberOfRows, numberOfColumns);
 
+			if (shouldIPrint)
+			{
+				print(numberOfRows, numberOfColumns);
+			}
 		}
 
-		///Rot to the right; 
-		if (currentApple.coord_X + 1 <= numberOfColumns)
+		if (isValid(leftApple.coordVertical, leftApple.coordHorizontal))
 		{
-			Apple& rightApple = apples[currentApple.coord_X][currentApple.coord_Y+1];
-
-			if (!rightApple.isRotten)
+			rottenAppleMap[leftApple.coordVertical][leftApple.coordHorizontal] = true;
+			if (currentDay < totalDays)
 			{
-				rightApple.isRotten = true;
-				rightApple.dayID = currentDay + 1;
-				totalAmountOfApples--;
-
-				if (currentDay <= numberOfDays)
-				{
-					rottenApples.push(rightApple);
-				}
+				applesToRot.push(leftApple);
 			}
-			print(apples, numberOfRows, numberOfColumns);
 
+			if (shouldIPrint)
+			{
+				print(numberOfRows, numberOfColumns);
+			}
 		}
-		rottenApples.pop();
 
-		print(apples, numberOfRows, numberOfColumns);
+		if (isValid(rightApple.coordVertical, rightApple.coordHorizontal))
+		{
+			rottenAppleMap[rightApple.coordVertical][rightApple.coordHorizontal] = true;
+			if (currentDay < totalDays)
+			{
+				applesToRot.push(rightApple);
+			}
 
+			if (shouldIPrint)
+			{
+				print(numberOfRows, numberOfColumns);
+			}
+		}
+
+		applesToRot.pop();
 	}
-	cout << totalAmountOfApples;
 
+	cout << totalAmountOfApples - calculateRemainingApples(numberOfRows, numberOfColumns, totalAmountOfApples);
 }
 

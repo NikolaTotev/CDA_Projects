@@ -20,9 +20,9 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
-    <ProjectGuid>{0B2B4A48-6BBD-4D9B-9EE5-910A7396E485}</ProjectGuid>
+    <ProjectGuid>{CA16D946-95B8-4FA9-AB77-D020D955C045}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Blahr</RootNamespace>
+    <RootNamespace>Problem3StudentQueue</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -151,7 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Blahr.cpp" />
+    <ClCompile Include="Problem_3 - Student Queue.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

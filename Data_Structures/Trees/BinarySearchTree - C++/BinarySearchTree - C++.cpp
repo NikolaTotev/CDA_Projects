@@ -96,7 +96,7 @@ private:
 		return current;
 	}
 
-	TreeNode* removeNode(int value, TreeNode* current)
+	TreeNode* removeNode(int value, TreeNode* current)	
 	{
 		if (!current)
 		{
