@@ -46,8 +46,8 @@ int main()
 	student firstInLine = inputQueue.front();
 	firstInLine.timeOfEntry = minuteCounter;
 	inputQueue.pop();
-	studentGroups[firstInLine.group].push(firstInLine);
-	mainQueue.push(firstInLine.group);
+	studentGroups[firstInLine.group-1].push(firstInLine);
+	mainQueue.push(firstInLine.group-1);
 	bool isGroupEmpty = true;
 	longBoi numberOfStudentsPassed = 0;
 	if(numberOfStudents==1)
