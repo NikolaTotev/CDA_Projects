@@ -249,8 +249,15 @@ double checkResult(MaxHeap max, MinHeap min, int currentNumberOfCitizens)
 	double result = (minTop + maxTop) / 2;
 	return result;
 }
+
+double calculateMedian(MaxHeap &max, MinHeap &min, int &numberOfCitizensAdded, int lastAdded)
+{
+	if()
+}
 int main()
 {
+	std::ios_base::sync_with_stdio(false);
+	std::cin.tie(NULL);
 	MinHeap minHeap;
 	MaxHeap maxHeap;
 
@@ -259,18 +266,83 @@ int main()
 	vector<double> results;
 	int input;
 	int numberOfCitizensAdded = 0;
+	double median;
 	for (int i = 0; i < numberOfCitizens; ++i)
 	{
 		cin >> input;
-		minHeap.insert(input);
-		maxHeap.insert(input);
-		numberOfCitizensAdded++;
-		results.push_back(checkResult(maxHeap, minHeap, numberOfCitizensAdded));
+		if(maxHeap.heapSize() ==0 && minHeap.heapSize()==0)
+		{
+			median = input;
+			minHeap.insert(input);
+			maxHeap.insert(input);
+			numberOfCitizensAdded++;
+		}
+		else
+		{		
+			if(numberOfCitizensAdded%2==0)
+			{
+				if(input > median)
+				{
+					minHeap.insert(input);
+				}
+				if(input < median)
+				{
+					maxHeap.insert(input);
+				}
+				median = (minHeap.getMin() + maxHeap.getMax()) / 2;
+			}
+			else
+			{
+				double prevMedi = median;
+				bool insertedIntoLeft = false;
+				if(input<median)
+				{
+					maxHeap.insert(input);
+					insertedIntoLeft = true;
+				}
+				if(input > median)
+				{
+					minHeap.insert(input);
+				}
+
+				if(insertedIntoLeft)
+				{
+					median = (maxHeap.getMax() + median) / 2;
+					if(prevMedi < median)
+					{
+						maxHeap.insert(prevMedi);
+					}
+					if(prevMedi > median)
+					{
+						minHeap.insert(prevMedi);
+					}
+				}
+				else
+				{
+					median = (minHeap.getMin() + median) / 2;
+					if (prevMedi < median)
+					{
+						maxHeap.insert(prevMedi);
+					}
+					if (prevMedi > median)
+					{
+						minHeap.insert(prevMedi);
+					}
+				}
+				if(input==median)
+				{
+					
+				}
+			}
+			
+		}
+
+		cout << fixed << setprecision(1) << median << endl;
 	}
 
 	for (int i = 0; i < numberOfCitizens; ++i)
 	{
-		cout <<fixed<< setprecision(2) << results[i] << endl;
+		cout <<fixed<< setprecision(1) << results[i] << endl;
 	}
 }
 
