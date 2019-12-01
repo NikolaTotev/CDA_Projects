@@ -3,10 +3,15 @@
 using namespace std;
 struct point
 {
-
-	point& operator = (point& rhs)
+	point()
 	{
-		if(this!=&rhs)
+		coordX = 0;
+		coordY = 0;
+		distToFMI = 0;
+	}
+	point& operator = (point &rhs)
+	{
+		if (this != &rhs)
 		{
 			coordX = rhs.coordX;
 			coordY = rhs.coordY;
@@ -24,6 +29,8 @@ struct point
 	double coordY;
 	double distToFMI;
 };
+
+
 class MaxHeap
 {
 private:
@@ -49,6 +56,7 @@ private:
 
 		while (heapArray[pos].distToFMI > heapArray[parentIndex].distToFMI)
 		{
+
 			swap(heapArray[pos], heapArray[parentIndex]);
 			if (parentIndex <= 0)
 			{
@@ -70,28 +78,24 @@ private:
 		bool hasRight = rightChildIndex < heapArray.size();
 
 
-		if (hasRight && (heapArray[pos].distToFMI < heapArray[leftChildIndex].distToFMI 
+		if (hasRight && (heapArray[pos].distToFMI < heapArray[leftChildIndex].distToFMI
 			|| heapArray[pos].distToFMI < heapArray[rightChildIndex].distToFMI))
 		{
 			int swapWith = -1;
 			if (heapArray[leftChildIndex].distToFMI < heapArray[rightChildIndex].distToFMI)
 			{
 				swapWith = rightChildIndex;
-
 			}
 			else
 			{
 				swapWith = leftChildIndex;
-
 			}
-
 
 			swap(heapArray[pos], heapArray[swapWith]);
 			siftDown(swapWith);
 		}
 		else if (hasLeft && heapArray[pos].distToFMI < heapArray[leftChildIndex].distToFMI)
 		{
-
 			swap(heapArray[pos], heapArray[leftChildIndex]);
 			siftDown(leftChildIndex);
 		}
@@ -131,10 +135,80 @@ public:
 		siftDown(0);
 	}
 };
+void merge(point* arr, point* helper, int start, int mid, int end)
+{
 
+	int left1 = start;
+	int left2 = mid;
+	int i = start;
+
+	for (; left1 < mid && left2 < end; ++i)
+
+	{
+		if (arr[left1].distToFMI <= arr[left2].distToFMI)
+		{
+			if (arr[left1].distToFMI == arr[left2].distToFMI)
+			{
+				if (arr[left1].coordX < arr[left2].coordX)
+				{
+					helper[i] = arr[left1++];
+					
+				}
+				else
+				{
+					helper[i] = arr[left2++];
+				}
+			}
+			else {
+				helper[i] = arr[left1++];
+			}
+			/*if (arr[left1].distToFMI <= arr[left2].distToFMI)
+			{
+				helper[i] = arr[left1++];
+			}
+			else
+			{
+				helper[i] = arr[left2++];
+			}*/
+		}
+		else
+		{
+			helper[i] = arr[left2++];
+		}
+	}
+
+	while (left1 < mid)
+	{
+		helper[i++] = arr[left1++];
+	}
+
+	while (left2 < end)
+	{
+		helper[i++] = arr[left2++];
+	}
+
+	for (int j = start; j < end; ++j)
+	{
+		arr[j] = helper[j];
+	}
+
+}
+
+void merge_sort(point* arr, point* helper, int leftLim, int rightLim)
+{
+	if (leftLim + 1 < rightLim)
+	{
+
+		int middle = (leftLim + rightLim) / 2;
+		merge_sort(arr, helper, leftLim, middle);
+		merge_sort(arr, helper, middle, rightLim);
+		merge(arr, helper, leftLim, middle, rightLim);
+	}
+
+}
 double calculateDistance(double coordX, double coordY)
 {
-	return sqrt(pow(coordX,2)+pow(coordY,2));
+	return sqrt(pow(coordX, 2) + pow(coordY, 2));
 }
 int main()
 {
@@ -152,24 +226,34 @@ int main()
 		cin >> inputX >> inputY;
 		double dist = calculateDistance(inputX, inputY);
 		point pointToInsert(inputX, inputY, dist);
-		if(maxHeap.heapSize()== apartmentsToFind )
+		if (maxHeap.heapSize() == apartmentsToFind)
 		{
-			if( maxHeap.getMax().distToFMI > dist)
+			if (maxHeap.getMax().distToFMI > dist)
 			{
 				maxHeap.extractMax();
 				maxHeap.insert(pointToInsert);
-			}			
+			}
 		}
 		else
 		{
 			maxHeap.insert(pointToInsert);
 		}
 	}
-
-	while(!maxHeap.isEmpty())
+	point* finalVect = new point[maxHeap.heapSize()];
+	point* helper = new point[maxHeap.heapSize()];
+	int size = maxHeap.heapSize();
+	for (int i = 0; i < size; ++i)
 	{
-		cout << maxHeap.getMax().coordX <<" "<< maxHeap.getMax().coordY << endl;
+		point p = maxHeap.getMax();
+		finalVect[i] = p;
 		maxHeap.extractMax();
+	}
+
+	merge_sort(finalVect , helper, 0, size);
+
+	for (int i = 0; i < apartmentsToFind; i++)
+	{
+		cout << finalVect[i].coordX << " " << finalVect[i].coordY << endl;
 	}
 }
 
