@@ -1,15 +1,21 @@
 #include <iostream>
+#include <cmath>
 #include <vector>
+#include <queue>
 using namespace std;
-struct point
+typedef long long longBoi;
+struct Apartment
 {
-	point()
+	double coordX;
+	double coordY;
+	double distToFMI;
+	Apartment()
 	{
 		coordX = 0;
 		coordY = 0;
 		distToFMI = 0;
 	}
-	point& operator = (point &rhs)
+	Apartment& operator=(const Apartment& rhs)
 	{
 		if (this != &rhs)
 		{
@@ -19,42 +25,66 @@ struct point
 		}
 		return *this;
 	}
-	point(double x, double y, double dist)
+
+	bool operator < (Apartment& rhs) const
+	{
+		if (distToFMI == rhs.distToFMI)
+		{
+			if (coordX == rhs.coordX)
+			{
+				return false;
+			}
+			return coordX < rhs.coordX;
+		}
+		else
+		{
+			return distToFMI < rhs.distToFMI;
+		}
+	}
+
+	bool operator <= (Apartment& rhs) const
+	{
+		return distToFMI <= rhs.distToFMI && coordX < rhs.coordX;
+	}
+
+	bool operator >= (Apartment& rhs) const
+	{
+		return distToFMI >= rhs.distToFMI && coordX > rhs.coordX;
+	}
+	Apartment(double x, double y, double dist)
 	{
 		coordX = x;
 		coordY = y;
 		distToFMI = dist;
 	}
-	double coordX;
-	double coordY;
-	double distToFMI;
+
 };
 
 
 class MaxHeap
 {
 private:
-	std::vector<point> heapArray;
-	int capacity;
-	int size = 0;
+	std::vector<Apartment> heapArray;
+	longBoi capacity;
+	longBoi size = 0;
 
-	int parent(int i) { return((i - 1) / 2); }
-	int leftChild(int i) { return (2 * i) + 1; }
-	int rightChild(int i) { return (2 * i) + 2; }
+	int parent(longBoi i) { return((i - 1) / 2); }
+	int leftChild(longBoi i) { return (2 * i) + 1; }
+	int rightChild(longBoi i) { return (2 * i) + 2; }
 
-	void swap(point& A, point& B)
+	void swap(Apartment& A, Apartment& B)
 	{
-		point temp = A;
+		Apartment temp = A;
 		A = B;
 		B = temp;
 	}
 
 
-	void siftUp(int pos)
+	void siftUp(longBoi pos)
 	{
-		int parentIndex = parent(pos);
+		longBoi parentIndex = parent(pos);
 
-		while (heapArray[pos].distToFMI > heapArray[parentIndex].distToFMI)
+		while (heapArray[pos].distToFMI >= heapArray[parentIndex].distToFMI)
 		{
 
 			swap(heapArray[pos], heapArray[parentIndex]);
@@ -69,20 +99,20 @@ private:
 
 	}
 
-	void siftDown(int pos)
+	void siftDown(longBoi pos)
 	{
-		int leftChildIndex = leftChild(pos);
-		int rightChildIndex = rightChild(pos);
+		longBoi leftChildIndex = leftChild(pos);
+		longBoi rightChildIndex = rightChild(pos);
 
 		bool hasLeft = leftChildIndex < heapArray.size();
 		bool hasRight = rightChildIndex < heapArray.size();
 
 
-		if (hasRight && (heapArray[pos].distToFMI < heapArray[leftChildIndex].distToFMI
-			|| heapArray[pos].distToFMI < heapArray[rightChildIndex].distToFMI))
+		if (hasRight && (heapArray[pos] <= heapArray[leftChildIndex]
+			|| heapArray[pos].distToFMI <= heapArray[rightChildIndex].distToFMI))
 		{
-			int swapWith = -1;
-			if (heapArray[leftChildIndex].distToFMI < heapArray[rightChildIndex].distToFMI)
+			longBoi swapWith = -1;
+			if (heapArray[leftChildIndex].distToFMI <= heapArray[rightChildIndex].distToFMI)
 			{
 				swapWith = rightChildIndex;
 			}
@@ -94,7 +124,7 @@ private:
 			swap(heapArray[pos], heapArray[swapWith]);
 			siftDown(swapWith);
 		}
-		else if (hasLeft && heapArray[pos].distToFMI < heapArray[leftChildIndex].distToFMI)
+		else if (hasLeft && heapArray[pos].distToFMI <= heapArray[leftChildIndex].distToFMI)
 		{
 			swap(heapArray[pos], heapArray[leftChildIndex]);
 			siftDown(leftChildIndex);
@@ -106,11 +136,11 @@ public:
 	{
 		return heapArray.size() == 0;
 	}
-	int heapSize()
+	longBoi heapSize()
 	{
 		return heapArray.size();
 	}
-	void insert(point value)
+	void insert(Apartment value)
 	{
 
 		heapArray.push_back(value);
@@ -120,7 +150,7 @@ public:
 		}
 
 	}
-	point getMax()
+	Apartment getMax()
 	{
 		return heapArray[0];
 	}
@@ -135,98 +165,48 @@ public:
 		siftDown(0);
 	}
 };
-void merge(point* arr, point* helper, int start, int mid, int end)
+struct CustomCompare
 {
-
-	int left1 = start;
-	int left2 = mid;
-	int i = start;
-
-	for (; left1 < mid && left2 < end; ++i)
-
+	bool operator () (Apartment& lhs, Apartment& rhs)
 	{
-		if (arr[left1].distToFMI <= arr[left2].distToFMI)
-		{
-			if (arr[left1].distToFMI == arr[left2].distToFMI)
-			{
-				if (arr[left1].coordX < arr[left2].coordX)
-				{
-					helper[i] = arr[left1++];
-					
-				}
-				else
-				{
-					helper[i] = arr[left2++];
-				}
-			}
-			else {
-				helper[i] = arr[left1++];
-			}
-			/*if (arr[left1].distToFMI <= arr[left2].distToFMI)
-			{
-				helper[i] = arr[left1++];
-			}
-			else
-			{
-				helper[i] = arr[left2++];
-			}*/
-		}
-		else
-		{
-			helper[i] = arr[left2++];
-		}
+		return lhs < rhs;
 	}
 
-	while (left1 < mid)
-	{
-		helper[i++] = arr[left1++];
-	}
-
-	while (left2 < end)
-	{
-		helper[i++] = arr[left2++];
-	}
-
-	for (int j = start; j < end; ++j)
-	{
-		arr[j] = helper[j];
-	}
-
-}
-
-void merge_sort(point* arr, point* helper, int leftLim, int rightLim)
-{
-	if (leftLim + 1 < rightLim)
-	{
-
-		int middle = (leftLim + rightLim) / 2;
-		merge_sort(arr, helper, leftLim, middle);
-		merge_sort(arr, helper, middle, rightLim);
-		merge(arr, helper, leftLim, middle, rightLim);
-	}
-
-}
+};
 double calculateDistance(double coordX, double coordY)
 {
-	return sqrt(pow(coordX, 2) + pow(coordY, 2));
+	return sqrt(coordX * coordX + coordY * coordY);
 }
 int main()
 {
+	std::ios_base::sync_with_stdio(false);
+	std::cin.tie(NULL);
 	MaxHeap maxHeap;
+	priority_queue<Apartment, vector<Apartment>, CustomCompare>  MHeap;
+	longBoi numberOfApartments;
+	longBoi apartmentsToFind;
+	cin >> numberOfApartments;
+	cin >> apartmentsToFind;
+	//scanf("%d", &numberOfApartments);
+	//scanf("%d", &apartmentsToFind);
 
-	int numberOfApartments;
-	int apartmentsToFind;
-	cin >> numberOfApartments >> apartmentsToFind;
 
-
-	double inputX;
-	double inputY;
-	for (int i = 0; i < numberOfApartments; ++i)
+	if (numberOfApartments == 0 || apartmentsToFind == 0)
 	{
-		cin >> inputX >> inputY;
+		return 0;
+	}
+
+
+	longBoi inputX;
+	longBoi inputY;
+	for (longBoi i = 0; i < numberOfApartments; ++i)
+	{
+		cin >> inputX;
+		cin >> inputY;
+		//scanf("%lld %lld", &inputX, &inputY);
 		double dist = calculateDistance(inputX, inputY);
-		point pointToInsert(inputX, inputY, dist);
-		if (maxHeap.heapSize() == apartmentsToFind)
+		Apartment pointToInsert(inputX, inputY, dist);
+		/*if (maxHeap.heapSize() == apartmentsToFind)
 		{
 			if (maxHeap.getMax().distToFMI > dist)
 			{
@@ -237,23 +217,38 @@ int main()
 		else
 		{
 			maxHeap.insert(pointToInsert);
+		}*/
+		if (MHeap.size() == apartmentsToFind)
+		{
+			if (MHeap.top().distToFMI > dist)
+			{
+				MHeap.pop();
+				MHeap.push(pointToInsert);
+			}
+		}
+		else
+		{
+			MHeap.push(pointToInsert);
 		}
 	}
-	point* finalVect = new point[maxHeap.heapSize()];
-	point* helper = new point[maxHeap.heapSize()];
-	int size = maxHeap.heapSize();
-	for (int i = 0; i < size; ++i)
+	/*
+		vector<Apartment> finalApartments;
+		while(!maxHeap.isEmpty())
+		{
+			finalApartments.push_back(maxHeap.getMax());
+			maxHeap.extractMax();
+		}*/
+	vector<Apartment> finalApartments;
+	while (!MHeap.empty())
 	{
-		point p = maxHeap.getMax();
-		finalVect[i] = p;
-		maxHeap.extractMax();
+		//cout << MHeap.top().coordX << " " << MHeap.top().coordY << endl;
+		finalApartments.push_back(MHeap.top());
+		MHeap.pop();
 	}
 
-	merge_sort(finalVect , helper, 0, size);
-
-	for (int i = 0; i < apartmentsToFind; i++)
+	for (longBoi i = finalApartments.size() - 1; i >= 0; --i)
 	{
-		cout << finalVect[i].coordX << " " << finalVect[i].coordY << endl;
+		cout << finalApartments[i].coordX << " " << finalApartments[i].coordY << endl;
 	}
 }
 

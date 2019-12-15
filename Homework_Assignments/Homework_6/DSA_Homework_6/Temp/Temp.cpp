@@ -4,12 +4,12 @@
 #include <iomanip>
 using namespace std;
 
-typedef long long longBoi;
+typedef int longBoi;
 class MaxHeap
 {
 private:
-	vector<double> heapArray;
-	double* myArray = new double[500000];
+	//vector<double> heapArray;
+	double* heapArray = new double[500001];
 	longBoi capacity;
 	longBoi size = 0;
 
@@ -25,7 +25,7 @@ private:
 	}
 
 
-	void siftUp(double pos)
+	void siftUp(int pos)
 	{
 		longBoi parentIndex = parent(pos);
 
@@ -43,13 +43,13 @@ private:
 
 	}
 
-	void siftDown(double pos)
+	void siftDown(int pos)
 	{
 		longBoi leftChildIndex = leftChild(pos);
 		longBoi rightChildIndex = rightChild(pos);
 
-		bool hasLeft = leftChildIndex < heapArray.size();
-		bool hasRight = rightChildIndex < heapArray.size();
+		bool hasLeft = leftChildIndex < size;// heapArray.size();
+		bool hasRight = rightChildIndex < size;// heapArray.size();
 
 
 		if (hasRight && (heapArray[pos] < heapArray[leftChildIndex] || heapArray[pos] < heapArray[rightChildIndex]))
@@ -78,19 +78,24 @@ private:
 public:
 	bool isEmpty()
 	{
-		return heapArray.size() == 0;
+		return size == 0;
+		//return heapArray.size() == 0;
 	}
 	longBoi heapSize()
 	{
-		return heapArray.size();
+		return size;
+		//return heapArray.size();
 	}
 	void insert(double value)
 	{
-
-		heapArray.push_back(value);
-		if (heapArray.size() != 0)
+		heapArray[size] = value;
+		size++;
+		//heapArray.push_back(value);
+		if(size!=0)
+		//if (heapArray.size() != 0)
 		{
-			siftUp(heapArray.size() - 1);
+			siftUp(size-1);
+			//siftUp(heapArray.size() - 1);
 		}
 
 	}
@@ -104,16 +109,18 @@ public:
 		{
 			return;
 		}
-		swap(heapArray[0], heapArray[heapArray.size() - 1]);
-		heapArray.pop_back();
+		swap(heapArray[0], heapArray[size - 1]);
+		size -= 1;
+		//swap(heapArray[0], heapArray[heapArray.size() - 1]);
+		//heapArray.pop_back();
 		siftDown(0);
 	}
 };
 class MinHeap
 {
 private:
-	vector<double> heapArray;
-	double* myArray = new double[500000];
+	//	vector<double> heapArray;
+	double* heapArray = new double[500001];
 	longBoi capacity;
 	longBoi size = 0;
 
@@ -129,7 +136,7 @@ private:
 	}
 
 
-	void siftUp(double pos)
+	void siftUp(int pos)
 	{
 		longBoi parentIndex = parent(pos);
 
@@ -143,17 +150,15 @@ private:
 			parentIndex = parent(parentIndex);
 			pos = parent(pos);
 		}
-
-
 	}
 
-	void siftDown(double pos)
+	void siftDown(int pos)
 	{
 		longBoi leftChildIndex = leftChild(pos);
 		longBoi rightChildIndex = rightChild(pos);
 
-		bool hasLeft = leftChildIndex < heapArray.size();
-		bool hasRight = rightChildIndex < heapArray.size();
+		bool hasLeft = leftChildIndex < size; //heapArray.size();
+		bool hasRight = rightChildIndex < size; //heapArray.size();
 
 
 		if (hasRight && (heapArray[pos] > heapArray[leftChildIndex] || heapArray[pos] > heapArray[rightChildIndex]))
@@ -183,19 +188,27 @@ private:
 public:
 	bool isEmpty()
 	{
-		return heapArray.size() == 0;
+		return size == 0;
+		//return heapArray.size() == 0;
 	}
 	longBoi heapSize()
 	{
-		return heapArray.size();
+		return size;
+		//return heapArray.size();
 	}
 	void insert(double value)
 	{
+		
 
-		heapArray.push_back(value);
-		if (heapArray.size() != 0)
+		heapArray[size] = value;
+		size++;
+		//heapArray.push_back(value);
+		if (size != 0)
+			//if (heapArray.size() != 0)
 		{
-			siftUp(heapArray.size() - 1);
+			siftUp(size-1);
+			
+			//siftUp(heapArray.size() - 1);
 		}
 
 	}
@@ -209,8 +222,10 @@ public:
 		{
 			return;
 		}
-		swap(heapArray[0], heapArray[heapArray.size() - 1]);
-		heapArray.pop_back();
+		swap(heapArray[0], heapArray[size - 1]);
+		size -= 1;
+		//swap(heapArray[0], heapArray[heapArray.size() - 1]);
+		//heapArray.pop_back();
 		siftDown(0);
 	}
 };
@@ -224,17 +239,18 @@ int main()
 
 	int numberOfCitizens;
 	cin >> numberOfCitizens;
-	if( numberOfCitizens == 0)
+	if (numberOfCitizens == 0)
 	{
 		cout << 0.0;
 		return 0;
 	}
 	vector<double> results;
-	double input;
+	long long input;
 	double median = 0;
 	for (int i = 0; i < numberOfCitizens; ++i)
 	{
 		cin >> input;
+		//scanf("%ld", &input);
 
 		if (input > median)
 		{
@@ -245,7 +261,7 @@ int main()
 			leftHeap.insert(input);
 		}
 
-		if(input == median)
+		if (input == median)
 		{
 			leftHeap.insert(input);
 		}
@@ -270,7 +286,7 @@ int main()
 		leftSize = leftHeap.heapSize();
 		rightSize = rightHeap.heapSize();
 
-		if(leftSize == rightSize)
+		if (leftSize == rightSize)
 		{
 			median = (leftHeap.getMax() + rightHeap.getMin()) / 2;
 		}
@@ -286,9 +302,8 @@ int main()
 				median = rightHeap.getMin();
 			}
 		}
-
-
-		cout << fixed << setprecision(1) << median << endl;
+		
+		cout << fixed << setprecision(1) << median << "\n";
 	}
 }
 
