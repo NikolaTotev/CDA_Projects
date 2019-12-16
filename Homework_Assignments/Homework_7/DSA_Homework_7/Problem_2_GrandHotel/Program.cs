@@ -3,40 +3,30 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using LongBoi = System.Int64;
+using LongBoi = System.Int32;
 namespace Problem_2_GrandHotel
 {
     class Program
     {
         static void Main(string[] args)
         {
-            Dictionary<LongBoi, LongBoi> roomKeys = new Dictionary<long, long>();
-            Dictionary<LongBoi, LongBoi> doorKeys = new Dictionary<long, long>();
+            //List<LongBoi> roomKeys = new List<long>();
+           // List<LongBoi> doorKeys = new List<long>();
 
             LongBoi numberOfRooms;
             string[] initNumbers = Console.ReadLine().Trim(' ').Split(' ');
-            LongBoi[] numbersConverted = Array.ConvertAll(initNumbers, long.Parse);
+            LongBoi[] numbersConverted = Array.ConvertAll(initNumbers, int.Parse);
             numberOfRooms = numbersConverted[0];
 
             string [] roomKeyInput = Console.ReadLine().Trim(' ').Split(' ');
-            List<LongBoi> roomKeyValues = Array.ConvertAll(roomKeyInput, long.Parse).ToList();
+            List<LongBoi> roomKeys = Array.ConvertAll(roomKeyInput, int.Parse).ToList();
 
             string[]  doorKeyInput = Console.ReadLine().Trim(' ').Split(' ');
-            List<LongBoi> doorKeyValues = Array.ConvertAll(doorKeyInput, long.Parse).ToList();
+            List<LongBoi> doorKeys = Array.ConvertAll(doorKeyInput, int.Parse).ToList();
 
-            for (int i = 0; i < roomKeyValues.Count; i++)
-            {
-                roomKeys[i] = roomKeyValues[i];
-                
-            }
-
-            for (int i = 0; i < doorKeyValues.Count; i++)
-            {
-                doorKeys[i] = doorKeyValues[i];
-            }
-
+           
             LongBoi minimumNumberOfKeys = 0;
-            Dictionary<LongBoi,LongBoi> currentKeys = new Dictionary<long,long>();
+            Dictionary<LongBoi,LongBoi> currentKeys = new Dictionary<int, int>();
             for (int i = 0; i < doorKeys.Count; i++)
             {
                 if (!currentKeys.ContainsKey(roomKeys[i]))
