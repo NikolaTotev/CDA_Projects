@@ -6,17 +6,16 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-
 namespace Problem_1_AutoComplete
 {
     class TrieNode
     {
-        private List<TrieNode> chidren;
+        private TrieNode[] chidren;
         private int numberOfSubWords;
 
         public int NumberOfSubWords { get => numberOfSubWords; set => numberOfSubWords = value; }
 
-        public List<TrieNode> Children
+        public TrieNode[] Children
         {
             get => chidren;
             set => chidren = value;
@@ -24,14 +23,12 @@ namespace Problem_1_AutoComplete
 
         public TrieNode()
         {
-            chidren = new List<TrieNode>();
             initList();
             numberOfSubWords = 0;
         }
 
         public TrieNode(char data)
         {
-            chidren = new List<TrieNode>();
             initList();
             numberOfSubWords = 0;
         }
@@ -40,9 +37,8 @@ namespace Problem_1_AutoComplete
         {
             TrieNode[] arr = new TrieNode[26];
             arr.Initialize();
-            chidren = new List<TrieNode>(arr);
+            chidren = arr;
         }
-
     }
 
     class Trie
@@ -114,9 +110,9 @@ namespace Problem_1_AutoComplete
                     currentNode.Children[letterIndex] = new TrieNode(word[i]);
 
                 }
+
                 currentNode = currentNode.Children[letterIndex];
                 currentNode.NumberOfSubWords++;
-
             }
         }
         public Trie()
@@ -170,7 +166,7 @@ namespace Problem_1_AutoComplete
             }
 
             string availableWords = Console.ReadLine();
-            List<string> words = availableWords.Split().ToList();
+            string[] words = availableWords.Split();
             Trie trie = new Trie();
 
 
