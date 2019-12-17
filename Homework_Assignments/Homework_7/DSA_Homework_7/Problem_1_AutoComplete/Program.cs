@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -11,28 +12,28 @@ namespace Problem_1_AutoComplete
     class TrieNode
     {
         private List<TrieNode> chidren;
-        private char nodeData;
+        private int numberOfSubWords;
 
-        public char NodeData
+        public int NumberOfSubWords { get => numberOfSubWords; set => numberOfSubWords = value; }
+
+        public List<TrieNode> Children
         {
-            get => nodeData;
-            set => nodeData = value;
+            get => chidren;
+            set => chidren = value;
         }
-
-        public List<TrieNode> Children { get => chidren; }
 
         public TrieNode()
         {
             chidren = new List<TrieNode>();
             initList();
-            nodeData = ' ';
+            numberOfSubWords = 0;
         }
 
         public TrieNode(char data)
         {
             chidren = new List<TrieNode>();
             initList();
-            nodeData = data;
+            numberOfSubWords = 0;
         }
 
         private void initList()
@@ -40,35 +41,13 @@ namespace Problem_1_AutoComplete
             TrieNode[] arr = new TrieNode[26];
             arr.Initialize();
             chidren = new List<TrieNode>(arr);
-            //for (int i = 0; i < 26; i++)
-            //{
-            //    chidren.Add(null);
-            //}
         }
 
-        public void AddChild(int index, char data)
-        {
-            if (chidren[index] == null)
-            {
-                chidren[index] = new TrieNode(data);
-            }
-        }
-    };
+    }
 
     class Trie
     {
         private TrieNode root;
-        private bool printMessages;
-        private Dictionary<string, string> dictionary;
-        private Dictionary<char, int> alphabet = new Dictionary<char, int>()
-        {
-            {'a',0},{'b',1},{'c',2},{'d',3},{'e',4},
-            {'f',5},{'g',6},{'h',7},{'i',8},{'j',9},
-            {'k',10},{'l',11},{'m',12},{'n',13},{'o',14},
-            {'p',15},{'q',16},{'r',17},{'s',18},{'t',19},
-            {'u',20},{'v',21},{'w',22},{'x',23},{'y',24},
-            {'z',25},
-        };
 
         bool wordExists(string word)
         {
@@ -76,7 +55,7 @@ namespace Problem_1_AutoComplete
             for (int i = 0; i < word.Length; i++)
             {
                 char currentLetter = word[i];
-                int letterIndex = alphabet[currentLetter];
+                int letterIndex = currentLetter - 'a';
 
 
                 if (currentNode.Children[letterIndex] == null)
@@ -88,16 +67,14 @@ namespace Problem_1_AutoComplete
             }
             return true;
         }
-        int wordCounter = 0;
 
         int countWords(string prefix)
         {
-            bool reachedEndOfPrefix;
             TrieNode currentNode = root;
             for (int i = 0; i < prefix.Length; i++)
             {
                 char currentLetter = prefix[i];
-                int letterIndex = alphabet[currentLetter];
+                int letterIndex = currentLetter - 'a';
 
 
                 if (currentNode.Children[letterIndex] == null)
@@ -107,77 +84,54 @@ namespace Problem_1_AutoComplete
 
                 currentNode = currentNode.Children[letterIndex];
             }
-            reachedEndOfPrefix = true;
-            if (dictionary.ContainsKey(prefix))
-            {
-                wordCounter++;
-            }
-
-
-            for (int i = 0; i < 26; i++)
-            {
-                if (currentNode.Children[i] != null)
-                {
-                    string currentWord = prefix + currentNode.Children[i].NodeData;
-
-
-                    if (dictionary.ContainsKey(currentWord))
-                    {
-                        wordCounter++;
-                    }
-                    countWords(prefix + currentNode.Children[i].NodeData);
-                    if (dictionary.Contains(currentWord))
-                    {
-                        //wordCounter++;
-                        Console.WriteLine(currentWord + " {0}", wordCounter);
-                    }
-                }
-            }
-
-            return wordCounter;
+            return currentNode.NumberOfSubWords;
         }
 
-        void insertWord(string word)
+        void insertWord(string word, bool isWordIn)
         {
             TrieNode currentNode = root;
+
+            if (isWordIn)
+            {
+                for (int i = 0; i < word.Length; i++)
+                {
+
+                    char currentLetter = word[i];
+                    int letterIndex = currentLetter - 'a';
+                    currentNode = currentNode.Children[letterIndex];
+                    currentNode.NumberOfSubWords++;
+                }
+
+                return;
+            }
             for (int i = 0; i < word.Length; i++)
             {
                 char currentLetter = word[i];
-                int letterIndex = alphabet[currentLetter];
-
+                int letterIndex = currentLetter - 'a';
 
                 if (currentNode.Children[letterIndex] == null)
                 {
                     currentNode.Children[letterIndex] = new TrieNode(word[i]);
+
                 }
-
                 currentNode = currentNode.Children[letterIndex];
-            }
+                currentNode.NumberOfSubWords++;
 
-
-            if (printMessages)
-            {
-                Console.WriteLine("Word inserted successfully!");
             }
         }
-        public Trie(bool print, Dictionary<string, string> validWords)
+        public Trie()
         {
-            printMessages = printMessages;
             root = new TrieNode();
-            dictionary = validWords;
         }
 
         public void Insert(string word)
         {
-            if (wordExists(word))
+            bool doesWordExists = wordExists(word);
+            if (doesWordExists)
             {
-                if (printMessages)
-                {
-                    Console.WriteLine("This word is already in the Trie.");
-                }
-                return;
+
             }
-            insertWord(word);
+            insertWord(word, doesWordExists);
         }
 
         public void WordsStartingWith(string prefix)
@@ -187,7 +141,6 @@ namespace Problem_1_AutoComplete
                 Console.WriteLine("0");
                 return;
             }
-            wordCounter = 0;
             int result = countWords(prefix);
             Console.WriteLine(result);
         }
@@ -210,13 +163,20 @@ namespace Problem_1_AutoComplete
             numberOfWords = numbersConverted[0];
             numberOfBeginnings = numbersConverted[1];
 
+
+            if (numberOfWords == 0 || numberOfBeginnings == 0)
+            {
+                Console.WriteLine("0");
+            }
+
             string availableWords = Console.ReadLine();
-            Dictionary<string, string> words = availableWords.Split().ToDictionary(x => x, x => x);
-            Trie trie = new Trie(false, words);
+            List<string> words = availableWords.Split().ToList();
+            Trie trie = new Trie();
+
 
             foreach (var word in words)
             {
-                trie.Insert(word.Key);
+                trie.Insert(word);
             }
 
             for (int i = 0; i < numberOfBeginnings; i++)
