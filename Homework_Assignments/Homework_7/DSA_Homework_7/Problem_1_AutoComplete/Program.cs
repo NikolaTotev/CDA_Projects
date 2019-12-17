@@ -37,10 +37,13 @@ namespace Problem_1_AutoComplete
 
         private void initList()
         {
-            for (int i = 0; i < 26; i++)
-            {
-                chidren.Add(null);
-            }
+            TrieNode[] arr = new TrieNode[26];
+            arr.Initialize();
+            chidren = new List<TrieNode>(arr);
+            //for (int i = 0; i < 26; i++)
+            //{
+            //    chidren.Add(null);
+            //}
         }
 
         public void AddChild(int index, char data)
@@ -56,7 +59,7 @@ namespace Problem_1_AutoComplete
     {
         private TrieNode root;
         private bool printMessages;
-        private List<string> dictionary;
+        private Dictionary<string, string> dictionary;
         private Dictionary<char, int> alphabet = new Dictionary<char, int>()
         {
             {'a',0},{'b',1},{'c',2},{'d',3},{'e',4},
@@ -105,17 +108,29 @@ namespace Problem_1_AutoComplete
                 currentNode = currentNode.Children[letterIndex];
             }
             reachedEndOfPrefix = true;
-            if (dictionary.Contains(prefix))
+            if (dictionary.ContainsKey(prefix))
             {
                 wordCounter++;
             }
-            
+
+
             for (int i = 0; i < 26; i++)
             {
                 if (currentNode.Children[i] != null)
                 {
-                    string currentWord = prefix+currentNode.Children[i].NodeData;
+                    string currentWord = prefix + currentNode.Children[i].NodeData;
+
+
+                    if (dictionary.ContainsKey(currentWord))
+                    {
+                        wordCounter++;
+                    }
                     countWords(prefix + currentNode.Children[i].NodeData);
+                    if (dictionary.Contains(currentWord))
+                    {
+                        //wordCounter++;
+                        Console.WriteLine(currentWord + " {0}", wordCounter);
+                    }
                 }
             }
 
@@ -139,13 +154,13 @@ namespace Problem_1_AutoComplete
                 currentNode = currentNode.Children[letterIndex];
             }
 
-            
+
             if (printMessages)
             {
                 Console.WriteLine("Word inserted successfully!");
             }
         }
-        public Trie(bool print, List<string> validWords)
+        public Trie(bool print, Dictionary<string, string> validWords)
         {
             printMessages = printMessages;
             root = new TrieNode();
@@ -173,7 +188,7 @@ namespace Problem_1_AutoComplete
                 return;
             }
             wordCounter = 0;
-            int result = countWords(prefix) - 1;
+            int result = countWords(prefix);
             Console.WriteLine(result);
         }
 
@@ -196,25 +211,18 @@ namespace Problem_1_AutoComplete
             numberOfBeginnings = numbersConverted[1];
 
             string availableWords = Console.ReadLine();
-            List<string> words = availableWords.Split().ToList();
+            Dictionary<string, string> words = availableWords.Split().ToDictionary(x => x, x => x);
             Trie trie = new Trie(false, words);
 
             foreach (var word in words)
             {
-                trie.Insert(word);
+                trie.Insert(word.Key);
             }
 
-
-            List<string> beginnings = new List<string>();
             for (int i = 0; i < numberOfBeginnings; i++)
             {
                 string inputBeginning = Console.ReadLine();
-                beginnings.Add(inputBeginning);
-            }
-
-            for (int i = 0; i < numberOfBeginnings; i++)
-            {
-                trie.WordsStartingWith(beginnings[i]);
+                trie.WordsStartingWith(inputBeginning);
             }
         }
     }

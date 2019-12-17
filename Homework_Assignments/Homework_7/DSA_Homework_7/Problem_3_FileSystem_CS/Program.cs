@@ -8,20 +8,20 @@ namespace Problem_3_FileSystem_CS
 {
     public class FileNode
     {
-        private string fileName;
-        private FileNode parent;
+        private string _fileName;
+        private FileNode _parent;
         private SortedDictionary<string, FileNode> childrenDictionary;
 
         public string FileName
         {
-            get => fileName;
-            set => fileName = value;
+            get => _fileName;
+            set => _fileName = value;
         }
 
         public FileNode Parent
         {
-            get => parent;
-            set => parent = value;
+            get => _parent;
+            set => _parent = value;
         }
 
         public FileNode(string name, FileNode parent)
