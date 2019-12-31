@@ -111,6 +111,11 @@ namespace BasicGraphCS
             }
         }
 
+        private void internalBFS(GraphNode currentContext)
+        {
+
+        }
+
         public void DFS()
         {
             internalDFS(vertecies[0]);
