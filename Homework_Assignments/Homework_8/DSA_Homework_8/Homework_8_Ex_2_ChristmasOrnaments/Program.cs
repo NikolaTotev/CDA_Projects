@@ -45,7 +45,6 @@ namespace Homework_8_Ex_2_ChristmasOrnaments
         }
     }
 
-
     public class UndirectedGraph<T>
     {
         public Dictionary<T, UndirectedGraphNode<T>> Nodes { get; set; }
