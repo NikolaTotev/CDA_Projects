@@ -153,7 +153,7 @@ namespace Homework_8_Ex4_Discos
     }
     public class WeightedUndirectedGraphNode<T> : IComparable
     {
-        private readonly Dictionary<T, WeightedGraphConnection<T>> m_Neighbors;
+        private readonly Dictionary<WeightedGraphConnection<T>, T> m_Neighbors;
         public T Data { get; set; }
         public bool IsVisited { get; set; }
         public int DistanceToThis { get; set; }
@@ -165,16 +165,31 @@ namespace Homework_8_Ex4_Discos
         public WeightedUndirectedGraphNode(T data)
         {
             //Initialize the dictionary
-            m_Neighbors = new Dictionary<T, WeightedGraphConnection<T>>();
+            m_Neighbors = new Dictionary<WeightedGraphConnection<T>, T>();
 
             //Set the data.
             Data = data;
         }
 
         //Returns a read only 
-        public IReadOnlyDictionary<T, WeightedGraphConnection<T>> GetNeighbors()
+        public IReadOnlyDictionary<WeightedGraphConnection<T>, T> GetNeighbors()
         {
             return m_Neighbors;
+        }
+
+        public void OneWayAdd(WeightedUndirectedGraphNode<T> neighborToAdd, int connectionWeight)
+        {
+            var myKey = m_Neighbors.FirstOrDefault(x => x.Value.Equals(neighborToAdd.Data)).Key;
+            if (connectionWeight != myKey.ConnectionWeight)
+            {
+
+                //Create a new connection object. This is used for the weighted graph.
+                WeightedGraphConnection<T> newConnection = new WeightedGraphConnection<T>(neighborToAdd, connectionWeight);
+
+                //Add the new connection to the list of connections.
+                m_Neighbors.Add(newConnection, neighborToAdd.Data);
+
+            }
         }
 
         /// <summary>
@@ -184,18 +199,30 @@ namespace Homework_8_Ex4_Discos
         /// <param name="connectionWeight"></param>
         public void AddNeighbor(WeightedUndirectedGraphNode<T> neighborToAdd, int connectionWeight)
         {
+
             //First check if the connection doesn't already exist.
-            if (!m_Neighbors.ContainsKey(neighborToAdd.Data))
+            if (!m_Neighbors.ContainsValue(neighborToAdd.Data))
             {
                 //Create a new connection object. This is used for the weighted graph.
                 WeightedGraphConnection<T> newConnection = new WeightedGraphConnection<T>(neighborToAdd, connectionWeight);
 
                 //Add the new connection to the list of connections.
-                m_Neighbors.Add(neighborToAdd.Data, newConnection);
+                m_Neighbors.Add(newConnection, neighborToAdd.Data);
 
                 //Tell the neighbor to add this connection to it's list of connections.
                 //This is done because the graph is undirected.
                 neighborToAdd.AddNeighbor(this, connectionWeight);
+            }
+            else
+            {
+                var myKey = m_Neighbors.FirstOrDefault(x => x.Value.Equals(neighborToAdd.Data)).Key;
+                if (connectionWeight != myKey.ConnectionWeight)
+                {
+                    WeightedGraphConnection<T> newConnection = new WeightedGraphConnection<T>(neighborToAdd, connectionWeight);
+
+                    m_Neighbors.Add(newConnection, neighborToAdd.Data);
+                    neighborToAdd.OneWayAdd(this, connectionWeight);
+                }
             }
         }
 
@@ -324,7 +351,7 @@ namespace Homework_8_Ex4_Discos
                     distQueue.Enqueue(node.Value);
                 }
             }
-            
+
             //Finding the shortest distances can now begin. 
 
             //The following while loop runs while the priority queue has element.
@@ -346,17 +373,17 @@ namespace Homework_8_Ex4_Discos
                     //Calculate an alternative distance to current neighbor.
                     //The formula is as follows:
                     //altDistance = (cost of the path to the current node) + (cost of the path to neighbor node);
-                    int alternativeDist = currentMin + neighbor.Value.ConnectionWeight;
+                    int alternativeDist = currentMin + neighbor.Key.ConnectionWeight;
 
                     //Now a check must be performed to determine if a better route to current neighbor has been found.
                     //That is why we check the value in the distances dictionary.
-                    if (alternativeDist < distances[neighbor.Value.ConnectionNeighbor])
+                    if (alternativeDist < distances[neighbor.Key.ConnectionNeighbor])
                     {
                         //First change the value in the distances dictionary.
-                        distances[neighbor.Value.ConnectionNeighbor] = alternativeDist;
+                        distances[neighbor.Key.ConnectionNeighbor] = alternativeDist;
 
                         //Change the value of DistanceToThis of the neighbor node.
-                        neighbor.Value.ConnectionNeighbor.DistanceToThis = alternativeDist;
+                        neighbor.Key.ConnectionNeighbor.DistanceToThis = alternativeDist;
 
                         //Resort the distance queue,
                         //as the values have now changed and a smaller value is in the queue.
@@ -417,6 +444,14 @@ namespace Homework_8_Ex4_Discos
             //Get the line that contains the numbers that tell us which nodes are discos. By default all others are dorm rooms.
             int[] numbers = Array.ConvertAll(Console.ReadLine()?.Trim(' ').Split(), int.Parse);
 
+            foreach (var number in numbers)
+            {
+                int dummy = -1;
+                discoGraph.AddEdge(-1, number, 0);
+            }
+
+            var results = discoGraph.FindPath(-1);
+
             //Get the line that tells us how many requests for distances we will receive.
             int numberOfRequests = Array.ConvertAll(Console.ReadLine()?.Trim(' ').Split(), int.Parse)[0];
 
@@ -427,7 +462,6 @@ namespace Homework_8_Ex4_Discos
                 int requestPosition = Array.ConvertAll(Console.ReadLine()?.Trim(' ').Split(), int.Parse)[0];
 
                 //Get the dictionary containing the results. 
-                var results = discoGraph.FindPath(requestPosition);
 
                 //After results have been received finding the closest disco takes place.
 
@@ -435,20 +469,15 @@ namespace Homework_8_Ex4_Discos
                 int minDist = int.MaxValue;
 
                 //For each known disco check the distance
-                foreach (int number in numbers)
-                {
-                    //Get the distance to current disco.
-                    int discoDist = results[discoGraph.Nodes[number]];
 
-                    //If the distance to the current distance is smaller than the previously smaller distance change it.
-                    if (discoDist < minDist)
-                    {
-                        minDist = discoDist;
-                    }
-                }
+                //Get the distance to current disco.
+                int discoDist = results[discoGraph.Nodes[requestPosition]];
+
+
+
 
                 //Write out the smallest distance for this request.
-                Console.WriteLine(minDist);
+                Console.WriteLine(discoDist);
             }
         }
     }
